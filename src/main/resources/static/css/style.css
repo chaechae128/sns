@@ -1,0 +1,23 @@
+@charset "UTF-8";
+header{
+    height: 100px;
+    background-color: #CCC;
+}
+footer{
+    height: 50px;
+    background-color: #CCC;
+}
+.contents{
+    min-height: 500px;
+}
+#IdCheckBtn {
+   background-color: dodgerblue;
+   color: white;
+}
+#signUpBtn{
+    background-color: dodgerblue;
+   color: white;
+}
+.signUp{
+    width: 300px;
+}
