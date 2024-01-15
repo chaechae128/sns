@@ -9,6 +9,6 @@
 	<%-- 로그인 정보 --%>
 	<div>
 		<span>보람님 안녕하세요</span>
-		<a href="/user/sign-out">로그아웃</a>
+		<a href="/user/sign-out" class="ml-2 text-white font-weight-bold">로그아웃</a>
 	</div>
 </div>
