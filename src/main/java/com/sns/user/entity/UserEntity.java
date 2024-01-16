@@ -19,7 +19,7 @@ import lombok.ToString;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-@Builder(toBuilder = true)
+@Builder
 @Table(name = "user")
 @Getter
 @Entity

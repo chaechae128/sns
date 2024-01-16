@@ -19,7 +19,7 @@
 			<jsp:include page="../include/header.jsp" />
 		</header>
 		<section class="contents">
-			<jsp:include page="../user/signUp.jsp" />
+			<jsp:include page="../${viewName}.jsp" />
 		</section>
 	</div>
 </body>
