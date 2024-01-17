@@ -1,5 +1,7 @@
 package com.sns.timeline;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -24,8 +26,8 @@ public class TimelineController {
 			return "redirect:/user/sign-in-view";
 		}
 		//DB조회 
-		PostEntity post = postBO.getPostEntityByUserId(userId);
-		model.addAttribute("post", post);
+		List<PostEntity> postList = postBO.getPostList();
+		model.addAttribute("postList", postList);
 		
 		
 		model.addAttribute("viewName", "timeline/timeline");
