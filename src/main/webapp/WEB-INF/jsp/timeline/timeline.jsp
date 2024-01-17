@@ -1,55 +1,69 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<div class="timeline d-flex justify-content-center w-100">
-	<div class="mt-3 w-50">
-		<div class="border">
-			<div><textarea rows="3" cols="70" class="border-0">내용을 입력하세요</textarea></div>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<div class="timeline d-flex justify-content-center">
+	<div class="mt-3 contents-box">
+	
+		<%-- 글쓰기 영역 로그인 된 사람만 보이게 --%>
+		<c:if test="${not empty userId}">
+		<div class="write-box border rounded m-3">
+			<textarea id="writeTextArea" placeholder="내용을 입력하세요" class="w-100 border-0"></textarea>
 			<div class="d-flex justify-content-between">
-				<a href="#"><img src="/static/img/image_icon.png" class="ml-1" width="40px" alt="이미지"></a>
-				<button type="submit" class="btn btn-primary m-2">업로드</button>
+				<a href="#" id="fileUploadBtn"><img src="/static/img/image_icon.png" class="ml-1" width="35px" alt="이미지"></a>
+				<button id="writeBtn" class="btn btn-primary m-2">업로드</button>
 			</div>
 		</div>
+		</c:if>
 		
-		<div class="card mt-3">
-			<%--로그인된 사용자 --%>
-			<div class="d-flex justify-content-between bg-light align-items-center">
-				<div class="font-weight-bold pl-2"> marobiana</div>
-				<a href="#"><img src="/static/img/more-icon.png" class="ml-1" width="40px" alt="더보기"></a>
-			</div>
-			<%-- 이미지 영역 --%>
-			<div>
-				<img src="/static/img/panda.jpg" class="w-100" alt="사진"> 
-			</div>
-			<%--좋아요 영역 --%>
-			<div class="d-flex justify-content-start m-2">
-				<img src="/static/img/heart-icon.png" alt="채워진 하트" width="20px" height="20px">
-				<div class="ml-1">좋아요 11개</div>
-			</div>
-			<%-- post - content --%>
-			<div class="d-flex justify-content-start" >
-				<div class="font-weight-bold"> marobiana</div>
-				<div class="ml-2">비지도 학습을 해본 결과입니다. cluster알고리즘을 사용해봤어요</div>
-			</div>
-			<div class="font-weight-bold mt-2">댓글</div>
-			
-			<%-- 댓글 영역 --%>
-			<div class="border-top mb-2">
-				<div class="d-flex justify-content-start m-2">
-					<div class="font-weight-bold">hagulu</div>
-					<div>: 분류가 잘 되었군요~ </div>
+		<%-- 타임라인 영역 --%>
+		<div class="timeline-box my-5">
+			<%-- 카드 1 --%>
+			<div class="card mt-3">
+				<%--글쓴이, 더보기(삭제) --%>
+				<div class="d-flex justify-content-between bg-light align-items-center">
+					<div class="font-weight-bold pl-2">${post.userId}</div>
+					<a href="#" class="more-btn"><img src="/static/img/more-icon.png" class="ml-1" width="40px" alt="더보기"></a>
 				</div>
-				<div class="d-flex justify-content-start m-2">
-					<div class="font-weight-bold">jun-coffee</div>
-					<div>: 철이 없었죠 분류를 위해 클러스터를 썼다는게 </div>
+				
+				<%-- 카드 이미지 영역 --%>
+				<div class="card-img">
+					<img src="${post.imagePath}" class="w-100 card-image" alt="사진"> 
 				</div>
-			</div>
-			
-			<%-- 댓글 쓰기 --%>
-			<div class="d-flex">
-  				<input type="text" class="form-control" placeholder="댓글 달기" aria-label="Recipient's username" aria-describedby="basic-addon2">
-  				<div class="input-group-append">
-    				<button class="input-group-text btn" id="basic-addon2">게시</button>
-  				</div>
+				<%--좋아요 영역 --%>
+				<div class="card-like d-flex justify-content-start m-2">
+					<a href="#" class="like-btn"><img src="/static/img/heart-icon.png" alt="채워진 하트" width="20px" height="20px"></a>
+					<div class="ml-1">좋아요 11개</div>
+				</div>
+				<%-- 글 영역 --%>
+				<div class="card-post d-flex justify-content-start" >
+					<div class="font-weight-bold ml-3">${post.userId}</div>
+					<div class="ml-2">${post.content}</div>
+				</div>
+				
+				<%-- 댓글 제목 --%>
+				<div class="card-comment-desc border-bottom">
+					<div class="ml-3 mb-1 mt-3 font-weight-bold">댓글</div>
+				</div>
+				
+				<%-- 댓글 목록 --%>
+				<div class="card-comment-list m-2">
+					<%-- 댓글 내용들 --%>
+					<div class="d-flex justify-content-start m-2">
+						<div class="font-weight-bold">댓글쓰니</div>
+						<div class="ml-2">댓글 내용</div>
+						<%-- 댓글 삭제 버튼 --%>
+						<a href="#" class="comment-del-btn">
+							<img src="https://www.iconninja.com/files/603/22/506/x-icon.png" width="10" height="10">
+						</a>
+					</div>
+					
+				</div>
+				
+				<%-- 댓글 쓰기 --%>
+				<div class="comment-write d-flex border-top mt-2">
+						<input type="text" class="form-control border-0 mr-2 comment-input" placeholder="댓글 달기"/> 
+						<button type="button" class="comment-btn btn btn-light">게시</button>
+				</div>
 			</div>
 		</div>
 	</div>

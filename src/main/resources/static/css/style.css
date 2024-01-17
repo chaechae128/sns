@@ -1,11 +1,11 @@
 @charset "UTF-8";
 header{
     height: 100px;
-    background-color: #CCC;
+    background-color: #FF99CC;
 }
 footer{
     height: 50px;
-    background-color: #CCC;
+    background-color:#FF99CC;
 }
 .contents{
     min-height: 500px;
@@ -20,4 +20,14 @@ footer{
 }
 .signUp{
     width: 300px;
+}
+
+.contents-box {width:650px;}
+
+#writeTextArea {height:100px;}
+
+.comment-input {width:565px;}
+
+.card-image{
+	max-height: 600px;
 }
