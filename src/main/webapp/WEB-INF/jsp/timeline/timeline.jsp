@@ -7,16 +7,28 @@
 		<%-- 글쓰기 영역 로그인 된 사람만 보이게 --%>
 		<c:if test="${not empty userId}">
 		<div class="write-box border rounded m-3">
+			
 			<textarea id="writeTextArea" placeholder="내용을 입력하세요" class="w-100 border-0"></textarea>
 			<div class="d-flex justify-content-between">
-				<a href="#" id="fileUploadBtn"><img src="/static/img/image_icon.png" class="ml-1" width="35px" alt="이미지"></a>
+				<%--file 태그를 숨겨두고 이미지를 클릭하면 file태그를 클릭한 것과 같은 효과 --%>
+				<input type="file" id="file" accept=".jpg, .jpeg, .gif, .png" class="d-none">
+
+				<%--이미지에 마우스를 올리면 마우스 커서가 변하도록 적용  --%>
+				<div class="d-flex">
+					<a href="#" id="fileUploadBtn"><img src="/static/img/image_icon.png" class="ml-1" width="35px" alt="이미지"></a>
+					<%-- 업로드 된 임시 이미지 파일 이름 나타내는 곳 --%>
+					<div id = "fileName" class="ml-2"></div>
+				</div>
 				<button id="writeBtn" class="btn btn-primary m-2">업로드</button>
+				
+				
 			</div>
 		</div>
 		</c:if>
 		
 		<%-- 타임라인 영역 --%>
 		<div class="timeline-box my-5">
+		<c:forEach items="${postList}" var="post">
 			<%-- 카드 1 --%>
 			<div class="card mt-3">
 				<%--글쓴이, 더보기(삭제) --%>
@@ -65,6 +77,106 @@
 						<button type="button" class="comment-btn btn btn-light">게시</button>
 				</div>
 			</div>
+			</c:forEach>
 		</div>
 	</div>
 </div>
+
+<script>
+	$(document).ready(function(){
+		//파일 이미지 클릭 = > 숨겨져 있는 id="file" 동작시킨다.
+		$("#fileUploadBtn").on('click', function(e){
+			e.preventDefault(); // a태그의 기본 동작 멈춤(스크롤이 위로 올라감)
+			$("#file").click(); //input file을 클릭한 효과
+		});//fileUploadBtn
+		
+		//사용자가 이미지를 선택하는 순간 유효성 확인 및 업로드된 파일명 노출
+		$("#file").on('change', function(e){
+			//alert("이미지 선택");
+			//취소를 누를 때 비어있는 경우 처리
+			if (file == null){
+				$("#file").val(""); //파일 태그 파일 제거(보이지 않지만 업로드 될 수 있으므로 주의)
+				$("#fileName").text(""); //보여지지는 파일명 지우기
+				return;
+			}
+			
+			let fileName = e.target.files[0].name; // teletob.jpg
+         	console.log(fileName);
+			
+			//확장자 유효성 체크
+			let ext = fileName.split(".").pop().toLowerCase();
+			//alert(ext);
+			
+			if(ext != "jpg" && ext != "jpeg" && ext != "gif" && ext != "png"){
+				alert("이미지 파일만 업로드 할 수 있습니다");
+				$("#file").val(""); //파일 태그 파일 제거(보이지 않지만 업로드 될 수 있으므로 주의)
+				$("#fileName").text(""); //보여지지는 파일명 지우기
+				return; 
+			}
+			
+			//유효성 통과한 이미지의 경우 파일명 노출
+			$("#fileName").text(fileName);
+
+			
+		});
+		
+		$("#writeBtn").on('click', function(){
+			//alert("업로드 버튼 클릭");
+			
+			//글 내용
+			let content = $("#writeTextArea").val();
+			//이미지
+			let file = $("#file").val();
+			
+			//validation
+			if(!file){
+				alert("이미지 파일을 선택하세요");
+				return;
+			}
+			
+			let ext = file.split(".").pop().toLowerCase();
+			//alert(ext);
+			
+			if(ext != "jpg" && ext != "jpeg" && ext != "gif" && ext != "png"){
+				alert("이미지 파일만 업로드 할 수 있습니다");
+				$("#file").val(""); //파일 태그 파일 제거(보이지 않지만 업로드 될 수 있으므로 주의)
+				$("#fileName").text(""); //보여지지는 파일명 지우기
+				return; 
+			}
+			
+			//form 태그 구성
+			let formData = new FormData();
+         formData.append("content", content);
+         formData.append("file", $("#file")[0].files[0]);
+			
+			//ajax
+			$.ajax({
+				//request
+				type: "POST"
+				,url: "/post/create"
+				,data: formData // form을 통째로 보냄
+				,enctype:"multipart/form-data" //파일 업로드를 위한 필수 설정  * 특히 이미지 있을 떄 반드시 필요
+				,processData:false //파일 업로드를 위한 필수 설정
+				,contentType:false //파일 업로드를 위한 필수 설정  dataparameter를 보낼 떄 원랜 String 으로 보내는데 난 객체로 보내겠다.
+				
+				//response
+				,success:function(data){
+					if(data.code == 200){
+						location.href="/timeline/timeline-view";
+					}else {
+						alert(data.error_message);
+					}
+				}
+				,error:function(status, response, error){
+					alert("글을 저장하는데 실패했습니다.");
+				}
+			
+			});//ajax
+			
+		});//writeBtn
+		
+		
+		
+
+	});
+</script>
