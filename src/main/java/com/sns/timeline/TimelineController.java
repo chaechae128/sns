@@ -8,8 +8,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.sns.timeline.post.bo.PostBO;
-import com.sns.timeline.post.entity.PostEntity;
+import com.sns.timeline.bo.TimelineBO;
+import com.sns.timeline.domain.CardView;
 
 import jakarta.servlet.http.HttpSession;
 
@@ -17,7 +17,10 @@ import jakarta.servlet.http.HttpSession;
 @Controller
 public class TimelineController {
 	@Autowired
-	private PostBO postBO;
+	private TimelineBO timelineBO;
+	
+
+	
 	@GetMapping("/timeline-view")
 	public String timelineView(HttpSession session, Model model) {
 		Integer userId = (Integer)session.getAttribute("userId");
@@ -25,11 +28,19 @@ public class TimelineController {
 		if(userId == null) {
 			return "redirect:/user/sign-in-view";
 		}
-		//DB조회 
-		List<PostEntity> postList = postBO.getPostList();
-		model.addAttribute("postList", postList);
 		
+		//DB조회 - post
+		//List<PostEntity> postList = postBO.getPostList();
+
+		//model.addAttribute("postList", postList);
 		
+		//DB조회 - comment
+		//List<Comment> commentList = commentBO.getCommentListByPostId();
+		
+		//model.addAttribute("commentList", commentList);
+		List<CardView> cardViewList	= timelineBO.generateCardViewList();
+		
+		model.addAttribute("cardViewList", cardViewList);
 		model.addAttribute("viewName", "timeline/timeline");
 	
 		return "template/layout";

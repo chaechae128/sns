@@ -31,3 +31,8 @@ footer{
 .card-image{
 	max-height: 600px;
 }
+.profile {
+    width: 300px;
+    height: 300px;
+    border-radius: 70%;
+}

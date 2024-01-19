@@ -28,18 +28,18 @@
 		
 		<%-- 타임라인 영역 --%>
 		<div class="timeline-box my-5">
-		<c:forEach items="${postList}" var="post">
+		<c:forEach items="${cardViewList}" var="cardView">
 			<%-- 카드 1 --%>
 			<div class="card mt-3">
 				<%--글쓴이, 더보기(삭제) --%>
 				<div class="d-flex justify-content-between bg-light align-items-center">
-					<div class="font-weight-bold pl-2">${post.userId}</div>
+					<div class="font-weight-bold pl-2">${cardView.post.userId}</div>
 					<a href="#" class="more-btn"><img src="/static/img/more-icon.png" class="ml-1" width="40px" alt="더보기"></a>
 				</div>
 				
 				<%-- 카드 이미지 영역 --%>
 				<div class="card-img">
-					<img src="${post.imagePath}" class="w-100 card-image" alt="사진"> 
+					<img src="${cardView.post.imagePath}" class="w-100 card-image" alt="사진"> 
 				</div>
 				<%--좋아요 영역 --%>
 				<div class="card-like d-flex justify-content-start m-2">
@@ -48,8 +48,8 @@
 				</div>
 				<%-- 글 영역 --%>
 				<div class="card-post d-flex justify-content-start" >
-					<div class="font-weight-bold ml-3">${post.userId}</div>
-					<div class="ml-2">${post.content}</div>
+					<div class="font-weight-bold ml-3">${cardView.post.userId}</div>
+					<div class="ml-2">${cardView.post.content}</div>
 				</div>
 				
 				<%-- 댓글 제목 --%>
@@ -60,21 +60,24 @@
 				<%-- 댓글 목록 --%>
 				<div class="card-comment-list m-2">
 					<%-- 댓글 내용들 --%>
-					<div class="d-flex justify-content-start m-2">
-						<div class="font-weight-bold">댓글쓰니</div>
-						<div class="ml-2 ">댓글 내용</div>
-						<%-- 댓글 삭제 버튼 --%>
-						<a href="#" class="comment-del-btn">
-							<img src="https://www.iconninja.com/files/603/22/506/x-icon.png" width="10" height="10">
-						</a>
-					</div>
-					
+					<c:forEach items="${commentList}" var="comment">
+						<c:if test="${post.id == comment.postId}">
+							<div class="d-flex justify-content-start m-2">
+							<div class="font-weight-bold">${comment.userId}</div>
+							<div class="ml-2 ">${comment.content}</div>
+							<%-- 댓글 삭제 버튼 --%>
+							<a href="#" class="comment-del-btn" data-comment-id="${comment.id}">
+								<img src="https://www.iconninja.com/files/603/22/506/x-icon.png" width="10" height="10">
+							</a>
+						</div>
+						</c:if>
+					</c:forEach>
 				</div>
 				
 				<%-- 댓글 쓰기 --%>
 				<div class="comment-write d-flex border-top mt-2">
-						<input type="text" class="form-control border-0 mr-2 comment-input" placeholder="댓글 달기"/> 
-						<button type="button" class="commentBtn btn btn-light" value="${post.id}">게시</button>
+					<input type="text" class="form-control border-0 mr-2 comment-input" placeholder="댓글 달기"/> 
+					<button type="button" class="commentBtn btn btn-light" data-user-id="${userId}" data-post-id="${post.id}">게시</button>
 				</div>
 			</div>
 			</c:forEach>
@@ -162,7 +165,7 @@
 				//response
 				,success:function(data){
 					if(data.code == 200){
-						location.href="/timeline/timeline-view";
+						location.href= reload();
 					}else {
 						alert(data.error_message);
 					}
@@ -177,25 +180,44 @@
 		
 		
 		//댓글 달기
-		$(".commentBtn").on('click', function(){
+		$(".commentBtn").on('click', function(e){
+			e.preventDefault();
 			//alert("commentBtn");
-			let postId = $(".commentBtn").val();
-			//console.log(postId);
-			let content = $(".comment-input").val();
+			let userId = $(this).data("user-id");
+			//alert(userId);
+			if(!userId){
+				// 비로그인 시 로그인 화면 이동
+				alert("로그인 후 이용 가능합니다");
+				location.href="/user/sign-in-view";
+				return;
+			}
+		
+			let postId = $(this).data("post-id");
+			//alert(postId);
+			
+			//댓글 내용 가져오기
+			//1)이전 태그 값 가져오기
+			//let content = $(this).prev().val(); //하나 전 태그 -> input
+			//alert(content);
+			
+			//2)형제 태그 중에서 input태그에 있는 값 가져오기
+			let content = $(this).siblings("input").val();  //siblings(): 형제 태그 가져오기
+			//alert(content);
 			
 			//validation
 			if(!content){
 				alert("댓글 내용을 입력하세요");
+				return;
 			}
 			
 			$.ajax({
 				type:"POST"
 				,url:"/comment/create"
-				,data:{"postId":postId, "content":contetn}
+				,data:{"postId":postId, "content":content}
 			
 				,success:function(data){
 					if(data.code==200){
-						location.href="/timeline/timeline-view";
+						location.reload(true);
 					} else{
 						alert(data.error_message);
 					}
@@ -209,6 +231,9 @@
 			
 		});//comment-btn
 		
-
+		$(".comment-del-btn").on('click', function(){
+			let commentId =  $(this).data("comment-id");
+			alert(commentId);
+		});//comment-del-btn
 	});
 </script>

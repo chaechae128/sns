@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.sns.comment.bo.CommentBO;
+import com.sns.comment.domain.Comment;
 import com.sns.common.FileManagerService;
 import com.sns.timeline.post.entity.PostEntity;
 import com.sns.timeline.post.repository.PostRepository;
@@ -17,6 +19,8 @@ public class PostBO {
 	
 	@Autowired
 	private FileManagerService fileManagerService;
+	
+
 	public List<PostEntity> getPostList() {
 		return postRepository.findAllByOrderByIdDesc();
 	}

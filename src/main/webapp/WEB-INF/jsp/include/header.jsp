@@ -12,7 +12,7 @@
 	<div>
 		<%-- 로그인 시 --%>
 		<c:if test="${not empty userId}">
-			<span>${userName}님 안녕하세요</span>
+			<span><a href="/user/profile-view">${userName}</a>님 안녕하세요</span>
 			<a href="/user/sign-out" class="ml-2 text-white font-weight-bold">로그아웃</a>
 		</c:if>
 		<%-- 로그아웃 시 --%>

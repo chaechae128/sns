@@ -1,8 +1,11 @@
 package com.sns.timeline.post.entity;
 
 import java.time.ZonedDateTime;
+import java.util.List;
 
 import org.hibernate.annotations.UpdateTimestamp;
+
+import com.sns.comment.domain.Comment;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -44,4 +47,5 @@ public class PostEntity {
 	@Column(name="updatedAt")
 	@UpdateTimestamp
 	private ZonedDateTime updatedAt;
+	
 }

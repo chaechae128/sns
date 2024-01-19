@@ -42,4 +42,11 @@ public class UserController {
 		return "redirect:/user/sign-in-	view";
 	}
 	
+	
+	@GetMapping("/profile-view")
+	public String profileView(Model model) {
+		model.addAttribute("viewName", "user/profile");
+		return "template/layout";
+	}
+	
 }
