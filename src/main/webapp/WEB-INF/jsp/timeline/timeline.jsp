@@ -62,7 +62,7 @@
 					<%-- 댓글 내용들 --%>
 					<div class="d-flex justify-content-start m-2">
 						<div class="font-weight-bold">댓글쓰니</div>
-						<div class="ml-2">댓글 내용</div>
+						<div class="ml-2 ">댓글 내용</div>
 						<%-- 댓글 삭제 버튼 --%>
 						<a href="#" class="comment-del-btn">
 							<img src="https://www.iconninja.com/files/603/22/506/x-icon.png" width="10" height="10">
@@ -74,7 +74,7 @@
 				<%-- 댓글 쓰기 --%>
 				<div class="comment-write d-flex border-top mt-2">
 						<input type="text" class="form-control border-0 mr-2 comment-input" placeholder="댓글 달기"/> 
-						<button type="button" class="comment-btn btn btn-light">게시</button>
+						<button type="button" class="commentBtn btn btn-light" value="${post.id}">게시</button>
 				</div>
 			</div>
 			</c:forEach>
@@ -176,6 +176,38 @@
 		});//writeBtn
 		
 		
+		//댓글 달기
+		$(".commentBtn").on('click', function(){
+			//alert("commentBtn");
+			let postId = $(".commentBtn").val();
+			//console.log(postId);
+			let content = $(".comment-input").val();
+			
+			//validation
+			if(!content){
+				alert("댓글 내용을 입력하세요");
+			}
+			
+			$.ajax({
+				type:"POST"
+				,url:"/comment/create"
+				,data:{"postId":postId, "content":contetn}
+			
+				,success:function(data){
+					if(data.code==200){
+						location.href="/timeline/timeline-view";
+					} else{
+						alert(data.error_message);
+					}
+				}
+				,error:function(request, status, error){
+					alert("댓글을 저장하는데 실패했습니다.");
+				}
+				
+			
+			});//ajax
+			
+		});//comment-btn
 		
 
 	});
