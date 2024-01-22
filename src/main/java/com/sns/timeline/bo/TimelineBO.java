@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.sns.comment.bo.CommentBO;
+import com.sns.comment.domain.CommentView;
 import com.sns.timeline.domain.CardView;
 import com.sns.timeline.post.bo.PostBO;
 import com.sns.timeline.post.entity.PostEntity;
@@ -29,15 +30,31 @@ public class TimelineBO {
 	//보통 DB에서 가져오는게 아니라 가공을 해서 가져오면 메소드 이름은 generate
 	public List<CardView> generateCardViewList(){
 		List<CardView> cardViewList = new ArrayList<>();
-		CardView cardView = new CardView();
+		
 		// 글 목록을 가져온다
 		List<PostEntity> postList = postBO.getPostList();
-		List <UserEntity> userList = userBO.getUserEntityByLoginId(null)
+		//List <UserEntity> userList = userBO.getUserEntityByLoginId(null)
 			
 		// 글 목록 반목문 순회
 		//post = > cardView => cardViewList 에 넣기
-		for(PostEntity i : postList) {
-			cardView.setPost(i);
+		for(PostEntity post : postList) {
+			//post하나에 대응되는 하나의 카드를 만든다.
+			CardView cardView = new CardView();
+			
+			//글 1개
+			cardView.setPost(post);
+			
+			//글쓴이 정보
+			UserEntity user = userBO.getUerEntityById(post.getUserId());
+			cardView.setUser(user);
+			
+			//댓글들
+			List<CommentView> commentList = commentBO.generateCommentViewListByPostId(post.getId());
+			cardView.setCommentList(commentList);	
+			
+			//좋아요 개수
+			
+			//★★★★ 마지막에 cardView를 list에 넣는다.
 			cardViewList.add(cardView);
 		}
 		

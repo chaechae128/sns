@@ -22,12 +22,8 @@ public class TimelineController {
 
 	
 	@GetMapping("/timeline-view")
-	public String timelineView(HttpSession session, Model model) {
-		Integer userId = (Integer)session.getAttribute("userId");
+	public String timelineView(Model model) {
 		
-		if(userId == null) {
-			return "redirect:/user/sign-in-view";
-		}
 		
 		//DB조회 - post
 		//List<PostEntity> postList = postBO.getPostList();

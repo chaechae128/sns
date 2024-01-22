@@ -33,7 +33,7 @@
 			<div class="card mt-3">
 				<%--글쓴이, 더보기(삭제) --%>
 				<div class="d-flex justify-content-between bg-light align-items-center">
-					<div class="font-weight-bold pl-2">${cardView.post.userId}</div>
+					<div class="font-weight-bold pl-2">${cardView.user.loginId}</div>
 					<a href="#" class="more-btn"><img src="/static/img/more-icon.png" class="ml-1" width="40px" alt="더보기"></a>
 				</div>
 				
@@ -48,36 +48,37 @@
 				</div>
 				<%-- 글 영역 --%>
 				<div class="card-post d-flex justify-content-start" >
-					<div class="font-weight-bold ml-3">${cardView.post.userId}</div>
+					<div class="font-weight-bold ml-2">${cardView.user.loginId}</div>
 					<div class="ml-2">${cardView.post.content}</div>
 				</div>
 				
 				<%-- 댓글 제목 --%>
 				<div class="card-comment-desc border-bottom">
-					<div class="ml-3 mb-1 mt-3 font-weight-bold">댓글</div>
+					<div class="ml-2 mb-1 mt-3 font-weight-bold">댓글</div>
 				</div>
 				
 				<%-- 댓글 목록 --%>
 				<div class="card-comment-list m-2">
 					<%-- 댓글 내용들 --%>
-					<c:forEach items="${commentList}" var="comment">
-						<c:if test="${post.id == comment.postId}">
-							<div class="d-flex justify-content-start m-2">
-							<div class="font-weight-bold">${comment.userId}</div>
-							<div class="ml-2 ">${comment.content}</div>
+					<c:forEach items="${cardView.commentList}" var="commentView">
+						<div class="d-flex justify-content-start m-2">
+							
+							
+							<div class="font-weight-bold">${commentView.userEntity.loginId}</div>
+							<div class="ml-2 ">${commentView.comment.content}</div>
 							<%-- 댓글 삭제 버튼 --%>
-							<a href="#" class="comment-del-btn" data-comment-id="${comment.id}">
+							<a href="#" class="comment-del-btn" data-comment-id="${commentView.comment.id}" data-user-id="${userId}">
 								<img src="https://www.iconninja.com/files/603/22/506/x-icon.png" width="10" height="10">
 							</a>
+							
 						</div>
-						</c:if>
+
 					</c:forEach>
 				</div>
-				
 				<%-- 댓글 쓰기 --%>
 				<div class="comment-write d-flex border-top mt-2">
 					<input type="text" class="form-control border-0 mr-2 comment-input" placeholder="댓글 달기"/> 
-					<button type="button" class="commentBtn btn btn-light" data-user-id="${userId}" data-post-id="${post.id}">게시</button>
+					<button type="button" class="commentBtn btn btn-light" data-user-id="${userId}" data-post-id="${cardView.post.id}">게시</button>
 				</div>
 			</div>
 			</c:forEach>
@@ -149,8 +150,8 @@
 			
 			//form 태그 구성
 			let formData = new FormData();
-         formData.append("content", content);
-         formData.append("file", $("#file")[0].files[0]);
+         	formData.append("content", content);
+         	formData.append("file", $("#file")[0].files[0]);
 			
 			//ajax
 			$.ajax({
@@ -165,7 +166,8 @@
 				//response
 				,success:function(data){
 					if(data.code == 200){
-						location.href= reload();
+				
+						location.reload(true);
 					}else {
 						alert(data.error_message);
 					}
@@ -231,9 +233,37 @@
 			
 		});//comment-btn
 		
-		$(".comment-del-btn").on('click', function(){
+		$(".comment-del-btn").on('click', function(e){
+			e.preventDefault();
 			let commentId =  $(this).data("comment-id");
-			alert(commentId);
+			//alert(commentId);
+			
+			let userId = $(this).data("user-id");
+			//alert(userId);
+			if(!userId){
+				// 비로그인 시 로그인 화면 이동
+				alert("로그인 후 이용 가능합니다");
+				location.href="/user/sign-in-view";
+				return;
+			}
+			
+			$.ajax({
+				type:"POST"
+				,url:"/comment/delete"
+				,data:{"commentId":commentId}
+			
+				,success:function(data){
+					if(data.code==200){
+						alert("댓글을 삭제하였습니다");
+						location.reload(true);
+					} else{
+						alert(data.error_message);
+					}
+				}
+				,error:function(request, status, error){
+					alert("댓글을 삭제하는데 실패했습니다.");
+				}
+			});
 		});//comment-del-btn
 	});
 </script>

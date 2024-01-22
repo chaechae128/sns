@@ -19,6 +19,13 @@ public class CommentRestController {
 	@Autowired
 	private CommentBO commentBO;
 	
+	/**
+	 * 댓글 생성
+	 * @param postId
+	 * @param content
+	 * @param session
+	 * @return
+	 */
 	@PostMapping("/create")
 	public Map<String, Object> create(
 			@RequestParam("postId") int postId,
@@ -36,4 +43,19 @@ public class CommentRestController {
 		
 		return result;
 	}
+	
+	@PostMapping("/delete")
+	public Map<String, Object> delete(
+			@RequestParam("commentId") int commentId){
+		//db delete
+		commentBO.deleteCommentById(commentId);
+		
+		//응답값
+		Map<String, Object> result = new HashMap<>();
+		result.putIfAbsent("code", 200);
+		result.putIfAbsent("result", "성공");
+		
+		return result;
+	}
+	
 }

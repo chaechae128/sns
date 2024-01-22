@@ -33,4 +33,9 @@ public class UserBO {
 	public UserEntity getUserEntityByLoginIdAndPassword(String loginId, String password) {
 		return userRepository.findByLoginIdAndPassword(loginId, password);
 	}
+	
+	//input:userId	ouput:UserEntity
+	public UserEntity getUerEntityById(int id) {
+		return userRepository.findById(id).orElse(null);
+	}
 }
