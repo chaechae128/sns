@@ -11,6 +11,7 @@ import com.sns.timeline.domain.CardView;
 import com.sns.timeline.post.bo.PostBO;
 import com.sns.timeline.post.entity.PostEntity;
 import com.sns.user.bo.UserBO;
+import com.sns.user.entity.UserEntity;
 
 @Service
 public class TimelineBO {
@@ -31,12 +32,12 @@ public class TimelineBO {
 		CardView cardView = new CardView();
 		// 글 목록을 가져온다
 		List<PostEntity> postList = postBO.getPostList();
-		//<UserEntity> userList = userBO.get
+		List <UserEntity> userList = userBO.getUserEntityByLoginId(null)
 			
 		// 글 목록 반목문 순회
 		//post = > cardView => cardViewList 에 넣기
-		for(int i = 0; i<postList.size(); i++) {
-			cardView.setPost(postList.get(i));	
+		for(PostEntity i : postList) {
+			cardView.setPost(i);
 			cardViewList.add(cardView);
 		}
 		
