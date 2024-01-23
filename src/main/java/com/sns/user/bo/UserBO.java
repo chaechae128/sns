@@ -38,4 +38,6 @@ public class UserBO {
 	public UserEntity getUerEntityById(int id) {
 		return userRepository.findById(id).orElse(null);
 	}
+	
+
 }

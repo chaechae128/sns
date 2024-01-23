@@ -36,4 +36,14 @@ public class PostBO {
 			                .imagePath(imagePath)
 			                .build());
 	}
+	
+	//int: userId		output: int(post 개수)
+	public int countByUserId(int userId) {
+		return postRepository.countByUserId(userId);
+	}
+	
+	//int userId    output: postList
+	public List<PostEntity> getPostListByUserId(int userId){
+		return postRepository.findByUserId(userId);
+	}
 }

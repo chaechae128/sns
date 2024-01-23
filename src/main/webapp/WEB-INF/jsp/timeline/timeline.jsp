@@ -43,8 +43,19 @@
 				</div>
 				<%--좋아요 영역 --%>
 				<div class="card-like d-flex justify-content-start m-2">
-					<a href="#" class="like-btn"><img src="/static/img/heart-icon.png" alt="채워진 하트" width="20px" height="20px"></a>
-					<div class="ml-1">좋아요 11개</div>
+					<%--cardView.filledLike --%>
+					<c:choose>
+						<c:when test="${cardView.filledLike}">
+							<a href="#" class="like-btn" data-post-id="${cardView.post.id}"><img src="/static/img/heart-icon.png" alt="채워진 하트" width="20px" height="20px"></a>
+						</c:when>
+						<c:otherwise>
+							<a href="#" class="emptylike-btn" data-post-id="${cardView.post.id}"><img src="/static/img/empty-heart-icon.png" alt="비워진 하트" width="20px" height="20px"></a>
+						</c:otherwise>
+					</c:choose>
+					
+					
+					
+					<div class="ml-1">좋아요 ${cardView.likeCount}개</div>
 				</div>
 				<%-- 글 영역 --%>
 				<div class="card-post d-flex justify-content-start" >
@@ -248,7 +259,7 @@
 			}
 			
 			$.ajax({
-				type:"POST"
+				type:"DELETE"
 				,url:"/comment/delete"
 				,data:{"commentId":commentId}
 			
@@ -265,5 +276,62 @@
 				}
 			});
 		});//comment-del-btn
+		
+		
+		$(".emptylike-btn").on('click', function(e){
+			e.preventDefault();
+			let postId = $(this).data("post-id");
+			//alert("비워진하트" + postId);
+
+			$.ajax({
+				url:"/like/"+postId 
+			
+				,success:function(data){
+					if(data.code==200){
+						location.reload(true);
+					} else if (data.code== 300){
+						alert(data.error_message);
+						location.href="/user/sign-in-view";
+					} else{
+						alert(data.error_message);
+					}
+				}
+				,error:function(request, status, error){
+					alert("좋아요를 누르는데 실패했습니다.");
+				}
+			});
+			
+			
+		}); //비워진 하트 -> 채워진 하트
+		
+		$(".like-btn").on('click', function(e){
+			e.preventDefault();
+			let postId = $(this).data("post-id");
+			//alert("비워진하트" + postId);
+			
+
+			
+			$.ajax({
+				url:"/like/"+postId  //like/13
+			
+				,success:function(data){
+					if(data.code==200){
+						location.reload(true);
+					} else if (data.code== 300){
+						alert(data.error_message);
+						location.href="/user/sign-in-view";
+					} else{
+						alert(data.error_message);
+					}
+				}
+				,error:function(request, status, error){
+					alert("좋아요를 취소하는데 실패했습니다.");
+				}
+			});
+			
+		}); //채워진 하트 -> 비워진 하트
+		
 	});
+	
+	
 </script>

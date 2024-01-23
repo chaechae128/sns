@@ -22,7 +22,8 @@ public class TimelineController {
 
 	
 	@GetMapping("/timeline-view")
-	public String timelineView(Model model) {
+	public String timelineView(Model model,
+			HttpSession session) {
 		
 		
 		//DB조회 - post
@@ -34,7 +35,8 @@ public class TimelineController {
 		//List<Comment> commentList = commentBO.getCommentListByPostId();
 		
 		//model.addAttribute("commentList", commentList);
-		List<CardView> cardViewList	= timelineBO.generateCardViewList();
+		int userId = (int) session.getAttribute("userId");
+		List<CardView> cardViewList	= timelineBO.generateCardViewList(userId);
 		
 		model.addAttribute("cardViewList", cardViewList);
 		model.addAttribute("viewName", "timeline/timeline");
