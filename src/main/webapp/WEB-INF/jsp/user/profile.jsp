@@ -1,5 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
 <div>
 	<%-- 로그인 아이디 --%>
 	<h1 class="ml-2">${userLoginId}</h1>
@@ -24,16 +26,23 @@
 	</div>
 	
 	<%-- 피드 목록 --%>
-		<div>
-		<h1>${profile.user.loginId}</h1>
-			<%-- 카드 1 --%>
-			<div class="card mt-3">
-				<%-- 카드 이미지 영역 --%>
-				<div class="card-img">
-					<img src="${cardView.post.imagePath}" class="w-100 card-image" alt="사진"> 
-				</div>
-			</div>
-				
+	<div class="feedList mt-3 d-flex col-9">
+		<%-- 카드 이미지 영역 --%>
+		<c:forEach items="${profile.postList}" var="post">
+			<a href="#" class="mr-2 feed" data-post-id="${post.id}"><img src="${post.imagePath}" class="card-image" alt="사진" width="300px" height="300px"></a> 
+		</c:forEach>
+	</div>
 
-		</div>
 </div>
+
+<script>
+	$(document).ready(function(){
+		//이미지 클릭시 피드 상세 페이지
+		$(".feed").on('click', function(){
+			let postId = $(this).data("post-id");
+			alert(postId);
+			
+		});//feed클릭
+		
+	});
+</script>

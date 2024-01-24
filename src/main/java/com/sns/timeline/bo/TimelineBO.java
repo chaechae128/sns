@@ -29,9 +29,9 @@ public class TimelineBO {
 	@Autowired
 	private LikeBO likeBO;
 	
-	//input:x	output:List<CardView>
+	//input:userId(비로그인: null, 로그인 userId) 	output:List<CardView>
 	//보통 DB에서 가져오는게 아니라 가공을 해서 가져오면 메소드 이름은 generate
-	public List<CardView> generateCardViewList(int userId){
+	public List<CardView> generateCardViewList(Integer userId){
 		List<CardView> cardViewList = new ArrayList<>();
 		
 		// 글 목록을 가져온다
@@ -59,7 +59,7 @@ public class TimelineBO {
 			cardView.setLikeCount(likeBO.selectLikeCountByPostId(post.getId()));
 			
 			//로그인된 사람이 좋아요를 했는지 여부(비로그인일때는 개수만)
-			cardView.setFilledLike(likeBO.isLikeByByPostIdUserId(post.getId(), userId));
+			cardView.setFilledLike(likeBO.getLikeByPostIdUserId(post.getId(), userId));
 			
 			
 			//★★★★ 마지막에 cardView를 list에 넣는다.

@@ -45,7 +45,7 @@
 				<div class="card-like d-flex justify-content-start m-2">
 					<%--cardView.filledLike --%>
 					<c:choose>
-						<c:when test="${cardView.filledLike}">
+						<c:when test="${cardView.filledLike eq true}">
 							<a href="#" class="like-btn" data-post-id="${cardView.post.id}"><img src="/static/img/heart-icon.png" alt="채워진 하트" width="20px" height="20px"></a>
 						</c:when>
 						<c:otherwise>

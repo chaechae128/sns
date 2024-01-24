@@ -36,3 +36,8 @@ footer{
     height: 250px;
     border-radius: 70%;
 }
+.feedList{
+	width: 750px;
+	margin-left: 200px;
+	padding-top: 60px;
+}
