@@ -34,7 +34,10 @@
 				<%--글쓴이, 더보기(삭제) --%>
 				<div class="d-flex justify-content-between bg-light align-items-center">
 					<div class="font-weight-bold pl-2">${cardView.user.loginId}</div>
-					<a href="#" class="more-btn"><img src="/static/img/more-icon.png" class="ml-1" width="40px" alt="더보기"></a>
+					<%-- (더보기  ... 버튼) 로그인 된 사람과 글쓴이 정보가 일치할 때만 노출 --%>
+					<c:if test="${userId eq cardView.post.userId}">
+					<a href="#" class="more-btn" data-toggle="modal" data-target="#modal" data-post-id="${cardView.post.id}"><img src="/static/img/more-icon.png" class="ml-1" width="40px" alt="더보기"></a>
+					</c:if>
 				</div>
 				
 				<%-- 카드 이미지 영역 --%>
@@ -96,6 +99,25 @@
 		</div>
 	</div>
 </div>
+
+<!-- Modal -->
+<div class="modal fade" id="modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	<%-- 
+		modal-sm: 작은 모달창 
+		modal-dialog-centered: 수직 기준 가운데 위치
+	--%>
+	<div class="modal-dialog modal-sm modal-dialog-centered">
+		<div class="modal-content text-center">
+			<div class="py-3 border-bottom">
+    			<a href="#" id="postDelete">삭제하기</a>
+    		</div>
+			<div class="py-3">
+    			<a href="#" data-dismiss="modal">취소하기</a>
+    		</div>
+		</div>
+	</div>
+</div>
+
 
 <script>
 	$(document).ready(function(){
@@ -331,6 +353,42 @@
 			
 		}); //채워진 하트 -> 비워진 하트
 		
+		// 더보기(...) 클릭 => 모달 띄우기
+		$(".more-btn").on('click', function(e) {
+			e.preventDefault(); // a 태그 올라가는 현상 방지
+			
+			let postId = $(this).data("post-id"); // getting
+			//alert(postId);
+			
+			// 1개로 존재하는 모달에 재활용을 위해 data-post-id를 심는다.
+			$("#modal").data("post-id", postId); // setting
+		});
+		
+		// 모달 안에 있는 삭제하기 클릭
+		$("#modal #postDelete").on('click', function(e) {
+			e.preventDefault(); // a 태그 위로 올라가는 현상 방지
+			
+			let postId = $("#modal").data("post-id");
+			//alert(postId);
+			
+			$.ajax({
+				type:"DELETE"
+				,url:"/post/delete"
+				,data:{"postId":postId}
+				,success:function(data){
+					if(data.code == 200){
+						location.reload();
+					}else{
+						alert(data.error_message)
+					}
+				}
+				,error:function(request, status, error){
+					alert("글을 삭제하는데 실패했습니다");
+				}
+			});//ajax
+			
+			
+		});
 	});
 	
 	
