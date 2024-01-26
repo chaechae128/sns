@@ -29,7 +29,7 @@
 	<div class="feedList mt-3 d-flex col-9">
 		<%-- 카드 이미지 영역 --%>
 		<c:forEach items="${profile.postList}" var="post">
-			<a href="#" class="mr-2 feed" data-post-id="${post.id}" data-post-imagePath="${post.imagePath}" data-toggle="modal" data-target="#modal"><img src="${post.imagePath}" class="card-image" alt="사진" width="300px" height="300px"></a> 
+			<a href="#" class="mr-2 feed" data-post-id="${post.id}" data-post-image-path="${post.imagePath}" data-toggle="modal" data-target="#modal"><img src="${post.imagePath}" class="card-image" alt="사진" width="300px" height="300px"></a> 
 		</c:forEach>
 	</div>
 
@@ -37,15 +37,38 @@
 
 
 <!-- Modal -->
-<div class="modal fade" id="modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog .modal-xl">
+<div class="modal fade bg-white" id="modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog .modal-lg modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-body d-flex">
-        <img width="500px" height="700px" id="modal-image">
-        <div class="bg-white" id="postComment">
-        	<h4>댓글</h4>
-        	<div>111sssssssssssssssssssssssssssssssss1111</div>
-        	<div>22222222</div>
+        <img id="modalImage" src="" width="600px" height="700px">
+        <div class="bg-white col-12" id="postComment">
+        	<div class="d-flex justify-content-between">
+        		<h4 class="ml-3">댓글</h4>
+        		<a href="#" data-dismiss="modal"><img src="/static/img/x.jpg" width="50px"></a>
+        	</div>
+        	<div>
+        	<%-- 댓글 내용들 --%>
+        	
+        	<c:forEach items="${cardViewList}" var="cardView">
+			
+			<c:forEach items="${profile.postList}" var="post">
+			<c:forEach items="${cardView.commentList}" var="commentView">
+			<c:if test="${cardView.post.id == post.id}">
+				<div class="d-flex justify-content-start m-2">
+					<div>${post.id}</div>
+					<div>${cardView.post.id}</div>
+					<div class="font-weight-bold">${commentView.userEntity.loginId}</div>
+					<div class="ml-2 ">${commentView.comment.content}</div>
+				</div>
+			</c:if>
+			</c:forEach>	
+			</c:forEach>
+			<%--<c:if test="${cardView.post.id eq post.id}"> -->
+			<%-- </c:if> --%>
+        	</c:forEach>
+        	
+        	</div>
         </div>
       </div>
     </div>
@@ -58,12 +81,16 @@
 			e.preventDefault(); // a 태그 올라가는 현상 방지
 			
 			let postId = $(this).data("post-id"); // getting
-			let postImagePath = $(this).data("post-imagePath); 
+			let postImagePath = $(this).data("post-image-path");
+			//alert(postImagePath);
 			//alert(postId);
 			
 			// 1개로 존재하는 모달에 재활용을 위해 data-post-id를 심는다.
 			$("#modal").data("post-id", postId); // setting
-			$("#modal-image").attr("src", "https://cdn.fanzeel.com/images/201906/5d0b3ea72915b.jpg");
+			$("#modalImage").attr("src", postImagePath);
+			//$("#modalImage").src=postImagePath;
+			//$("#modal").modal('show');
+			//$("#contents.body-contents").val(data);
 		});
 		
 		// 모달 안에 있는 삭제하기 클릭

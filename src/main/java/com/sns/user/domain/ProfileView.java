@@ -23,4 +23,5 @@ public class ProfileView {
 		private int postCount;
 		
 		
+		
 }
